@@ -1,4 +1,5 @@
-starter_board = [
+import numpy as np
+board = np.array([
     [0, 0, 6, 3, 9, 0, 8, 0, 1],
     [0, 8, 9, 0, 7, 0, 5, 3, 0],
     [3, 5, 0, 8, 0, 0, 9, 6, 0],
@@ -7,10 +8,7 @@ starter_board = [
     [4, 0, 3, 0, 0, 0, 6, 0, 8],
     [6, 0, 0, 0, 0, 9, 3, 8, 0],
     [0, 3, 0, 7, 8, 2, 0, 9, 0],
-    [0, 7, 0, 0, 0, 3, 0, 0, 0]]
-
-boxes = []
-cols = []
+    [0, 7, 0, 0, 0, 3, 0, 0, 0]])
 
 
 def print_board(board):
@@ -24,58 +22,46 @@ def print_board(board):
         print()
 
 
-def extract_boxes(board):
-    for i in range(0, 9, 3):
-        for j in range(0, 9, 3):
-            box = [board[x][y] for x in range(i, i+3) for y in range(j, j+3)]
-            boxes.append(box)
-    return boxes
-
-
-def extract_cols(board):
-    for j in range(9):
-        col = [board[i][j] for i in range(9)]
-        cols.append(col)
-    return cols
-
-
-def backtrack(sol_board, i, j):
-    for x in range(i, -1, -1):
-        for y in range(j, -1, -1):
-            if (starter_board[x, y]) == 0:
-                insert(sol_board, sol_board[x][y] + 1, x, y)
-
-
-def insert(sol_board, starter_val, i, j):
-    # find row element is in
-    row = sol_board[i]
-    # find col element is in
-    col = cols[j]
-    # find box element is in
-    box = boxes[((i // 3) * 3) + (j // 3)]
-    for z in range(9):
-        if (z not in row) and (z not in col) and (z not in box):
-            sol_board[i][j] = z
-            return
-    # can't insert any number must backtrack
-    backtrack(sol_board, i, j)
-    return sol_board
+def is_possible(i, j, n):
+    # check if num is in row
+    if n in board[i]:
+        return False
+    # check if num is in col
+    if n in board[:, j]:
+        return False
+    # check if num is in box
+    x = (j // 3) * 3
+    y = (i // 3) * 3
+    for y0 in range(y, y + 3):
+        for x0 in range(x, x + 3):
+            if board[y0][x0] == n:
+                return False
+    return True
 
 
 def solve():
-    sol_board = starter_board
+    # base case board is filled
+    if 0 not in board:
+        return True
+
+    # recursive case: board still needs to be filled
     for i in range(9):
         for j in range(9):
-            # if num is there move to next element
-            if starter_board[i][j] != 0:
-                continue
-            sol_board = insert(sol_board, 1, i, j)
+            if board[i][j] == 0:
+                for num in range(1, 10):
+                    if is_possible(i, j, num):
+                        board[i][j] = num
+                        if solve():
+                            return True
+                        board[i][j] = 0
+                return False
 
 
 def main():
-    extract_boxes(starter_board)
-    extract_cols(starter_board)
+    print_board(board)
+    print("\n")
     solve()
+    print_board(board)
 
 
 if __name__ == '__main__':
