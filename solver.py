@@ -1,18 +1,7 @@
 import numpy as np
+import requests
 
-board = np.array(
-    [
-        [0, 0, 6, 3, 9, 0, 8, 0, 1],
-        [0, 8, 9, 0, 7, 0, 5, 3, 0],
-        [3, 5, 0, 8, 0, 0, 9, 6, 0],
-        [0, 0, 0, 6, 0, 8, 0, 2, 3],
-        [8, 0, 1, 0, 3, 4, 0, 0, 0],
-        [4, 0, 3, 0, 0, 0, 6, 0, 8],
-        [6, 0, 0, 0, 0, 9, 3, 8, 0],
-        [0, 3, 0, 7, 8, 2, 0, 9, 0],
-        [0, 7, 0, 0, 0, 3, 0, 0, 0],
-    ]
-)
+# board = np.array([])
 
 
 def print_board(board):
@@ -83,6 +72,12 @@ def solve():
 
 
 def main():
+    global board
+    # fetch from api
+    url = "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value}}}"
+    req = requests.get(url)
+    response = req.json()
+    board = np.array(response.get("newboard").get("grids")[0].get("value"))
     print_board(board)
     print("\n")
     solve()
