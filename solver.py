@@ -1,8 +1,6 @@
 import numpy as np
 import requests
 
-# board = np.array([])
-
 
 def print_board(board):
     """
@@ -18,12 +16,12 @@ def print_board(board):
                 print("|", end=" ")
             print(board[i][j], end=" ")
         print()
+    print()
 
 
 def is_possible(i, j, n):
     """
-    is_possible takes in an coordinate of the sudoku board and a number and checks to
-    see if the number can be inserted without breaking the rules
+    is_possible takes in an coordinate of the sudoku board and a number and checks to see if the number can be inserted without breaking the rules
 
     :param i: the y coordinate of the sudoku board
     :param j: the x coordinate of the sudoku board
@@ -45,6 +43,36 @@ def is_possible(i, j, n):
             if board[y0][x0] == n:
                 return False
     return True
+
+
+def test_is_possible(i, j, n, preset_board):
+    """
+    test_is_possible is a tester method that uses a custom board and instead of an api generated one and uses that board for the is_possible method
+
+    :param i: the y coordinate of the sudoku board
+    :param j: the x coordinate of the sudoku board
+    :param n: the number that we're trying to insert
+    :param preset_board: the board we are using to test
+
+    :return: the value that is_possible returns
+    """
+    global board
+    board = preset_board
+    return is_possible(i, j, n)
+
+
+def test_solve(preset_board):
+    """
+    test_solve is a tester method that uses a custom board instead of an api generated one and uses that board for the solve method
+
+    :param preset_board: the board we are using to test
+
+    :return: the solved version of preset board
+    """
+    global board
+    board = preset_board
+    solve()
+    return board
 
 
 def solve():
@@ -73,14 +101,16 @@ def solve():
 
 def main():
     global board
-    # fetch from api
+    # fetch from api(only generates one solution 9x9 sudoku boards)
     url = "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value}}}"
     req = requests.get(url)
     response = req.json()
     board = np.array(response.get("newboard").get("grids")[0].get("value"))
+    print("Original Board:")
     print_board(board)
-    print("\n")
     solve()
+    input("Press enter when ready to see the solution\n")
+    print("Solved Board:")
     print_board(board)
 
 
