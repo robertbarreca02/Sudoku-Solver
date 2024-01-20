@@ -12,7 +12,7 @@ class tester(unittest.TestCase):
         """
         test_is_possible tests the functionality of the is_possible function in solver.py
         """
-        board = np.array(
+        solver.board = np.array(
             [
                 [0, 0, 6, 3, 9, 0, 8, 0, 1],
                 [0, 8, 9, 0, 7, 0, 5, 3, 0],
@@ -25,22 +25,21 @@ class tester(unittest.TestCase):
                 [0, 7, 0, 0, 0, 3, 0, 0, 0],
             ]
         )
-
         # case 1: check when insert is possible
-        self.assertTrue(solver.test_is_possible(0, 0, 2, board))
+        self.assertTrue(solver.is_possible(0, 0, 2))
         # case 2: check if insert not possible due to row
-        self.assertFalse(solver.test_is_possible(0, 0, 1, board))
+        self.assertFalse(solver.is_possible(0, 0, 1))
         # case 3: check if insert not possible due to col
-        self.assertFalse(solver.test_is_possible(0, 0, 4, board))
+        self.assertFalse(solver.is_possible(0, 0, 4))
         # case 4: check if insert not possible due to box
-        self.assertFalse(solver.test_is_possible(0, 0, 5, board))
+        self.assertFalse(solver.is_possible(0, 0, 5))
 
     def test_solve(self):
         """
         test_solve tests the functionality of the solve function solver.py
         """
         # case 1: test an easy board
-        preset_board = np.array(
+        solver.board = np.array(
             [
                 [0, 0, 6, 3, 9, 0, 8, 0, 1],
                 [0, 8, 9, 0, 7, 0, 5, 3, 0],
@@ -53,10 +52,10 @@ class tester(unittest.TestCase):
                 [0, 7, 0, 0, 0, 3, 0, 0, 0],
             ]
         )
-        self.assertTrue(solver.test_solve(preset_board))
+        self.assertTrue(solver.solve())
 
         # case 2 solve a medium board
-        preset_board = np.array(
+        solver.board = np.array(
             [
                 [0, 0, 0, 0, 2, 7, 0, 4, 1],
                 [1, 0, 0, 0, 0, 0, 8, 0, 0],
@@ -69,10 +68,10 @@ class tester(unittest.TestCase):
                 [8, 1, 2, 0, 0, 3, 0, 0, 6],
             ]
         )
-        self.assertTrue(solver.test_solve(preset_board))
+        self.assertTrue(solver.solve())
 
         # case 3 solve a hard board
-        preset_board = np.array(
+        solver.board = np.array(
             [
                 [0, 0, 0, 0, 7, 0, 6, 1, 2],
                 [6, 0, 0, 0, 2, 0, 0, 0, 8],
@@ -85,4 +84,4 @@ class tester(unittest.TestCase):
                 [9, 0, 0, 0, 4, 0, 0, 0, 0],
             ]
         )
-        self.assertTrue(solver.test_solve(preset_board))
+        self.assertTrue(solver.solve())

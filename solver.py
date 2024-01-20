@@ -45,36 +45,6 @@ def is_possible(i, j, n):
     return True
 
 
-def test_is_possible(i, j, n, preset_board):
-    """
-    test_is_possible is a tester method that uses a custom board and instead of an api generated one and uses that board for the is_possible method
-
-    :param i: the y coordinate of the sudoku board
-    :param j: the x coordinate of the sudoku board
-    :param n: the number that we're trying to insert
-    :param preset_board: the board we are using to test
-
-    :return: the value that is_possible returns
-    """
-    global board
-    board = preset_board
-    return is_possible(i, j, n)
-
-
-def test_solve(preset_board):
-    """
-    test_solve is a tester method that uses a custom board instead of an api generated one and uses that board for the solve method
-
-    :param preset_board: the board we are using to test
-
-    :return: the solved version of preset board
-    """
-    global board
-    board = preset_board
-    solve()
-    return validate()
-
-
 def solve():
     """
     solve is a recursive function that solves the sudoku board by filling in all the zero slots of the board
