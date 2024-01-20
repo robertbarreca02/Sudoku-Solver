@@ -72,7 +72,7 @@ def test_solve(preset_board):
     global board
     board = preset_board
     solve()
-    return board
+    return validate()
 
 
 def solve():
@@ -91,12 +91,45 @@ def solve():
         for j in range(9):
             if board[i][j] == 0:
                 for num in range(1, 10):
+                    # there is a valid num for the current slot
                     if is_possible(i, j, num):
                         board[i][j] = num
                         if solve():
                             return True
                         board[i][j] = 0
+                # there is not a valid number for the current slot, must backtrack
                 return False
+
+
+def validate():
+    """
+    validate is a function is function that takes checks to see if a given board follows all the rules of sudoku
+
+    :return: true if the board follows all the rules and false otherwise
+    """
+    for i in range(9):
+        row_set = set()
+        col_set = set()
+        for j in range(9):
+            # check rows
+            if board[i][j] != 0 and board[i][j] in row_set:
+                return False
+            row_set.add(board[i][j])
+            # check cols
+            if board[j][i] != 0 and board[j][i] in col_set:
+                return False
+            col_set.add(board[j][i])
+
+    # check boxes
+    for i in range(0, 9, 3):
+        for j in range(0, 9, 3):
+            box_set = set()
+            for x in range(3):
+                for y in range(3):
+                    val = board[i + x][j + y]
+                    if val != 0 and val in box_set:
+                        return False
+    return True
 
 
 def main():
