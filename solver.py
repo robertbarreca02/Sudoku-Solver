@@ -99,6 +99,7 @@ def validate():
                     val = board[i + x][j + y]
                     if val != 0 and val in box_set:
                         return False
+                    box_set.add(val)
     return True
 
 
