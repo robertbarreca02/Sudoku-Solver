@@ -217,6 +217,7 @@ class tester(unittest.TestCase):
             [9, 1, 7, 4, 6, 2, 8, 5, 3],
         ]
         self.assertTrue(solver.validate())
+
         # case 2: invalid completed sudoku board
         solver.board = [
             [2, 3, 9, 6, 1, 7, 4, 8, 5],
@@ -230,6 +231,7 @@ class tester(unittest.TestCase):
             [9, 1, 7, 4, 6, 2, 8, 5, 3],
         ]
         self.assertFalse(solver.validate())
+
         # case 3: test incomplete valid sudoku board
         solver.board = [
             [2, 3, 0, 6, 0, 5, 8, 7, 0],
@@ -242,7 +244,6 @@ class tester(unittest.TestCase):
             [1, 0, 6, 0, 0, 0, 0, 0, 5],
             [0, 0, 9, 0, 5, 8, 0, 6, 0],
         ]
-
         self.assertTrue(solver.validate())
 
         # case 4: incomplete invalid sudoku board bc of row
