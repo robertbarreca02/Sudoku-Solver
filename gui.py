@@ -1,5 +1,6 @@
 from tkinter import *
 import solver
+import copy
 
 
 def validate_input(char, val):
@@ -11,20 +12,23 @@ def on_enter(event):
     row, col = entry.row, entry.col
 
     # cache board if it needs to be reverted
-    starter_board = solver.board
+    starter_board = copy.deepcopy(solver.board)
 
     num = int(entry.get())
     solver.board[row][col] = num
+    starter_board[row][col] = num
     # solver.print_board(solver.board)
 
     # if it can lead to a solution set as read-only and tell user it's right
-    if solver.solve() and solver.validate:
+    if solver.solve() and solver.validate():
         entry.config(state="readonly")
         solver.board = starter_board
+        solver.print_board(starter_board)
         return
 
     # if it can't add 15 secs on timer, undo insertion in solver.board, and tell user it's wrong
     else:
+        solver.board = starter_board
         solver.board[row][col] = 0
         solver.print_board(solver.board)
         return
@@ -72,3 +76,13 @@ for i in range(3):
                     entry.row, entry.col = row, col  # Add custom attributes
 
 root.mainloop()
+
+
+# TODO:
+"""
+    add a timer
+    add a landing page
+    finish on enter fcn
+    finish on_enter fcn
+    do some testing    
+"""
