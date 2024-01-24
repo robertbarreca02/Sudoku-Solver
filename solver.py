@@ -53,7 +53,7 @@ def solve():
     """
 
     # base case board is filled
-    if 0 not in board:
+    if 0 not in board and validate():
         return True
 
     # recursive case: board still needs to be filled
@@ -69,6 +69,7 @@ def solve():
                         board[i][j] = 0
                 # there is not a valid number for the current slot, must backtrack
                 return False
+    return False
 
 
 def validate():

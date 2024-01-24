@@ -1,6 +1,7 @@
-import sys, pygame as pg, numpy as np, requests
+import sys
+import pygame as pg
 import numpy as np
-
+import requests
 
 pg.init()
 screen_size = 750, 750
