@@ -74,7 +74,7 @@ def solve():
 
 def validate():
     """
-    validate is a function is function that takes checks to see if a given board follows all the rules of sudoku
+    validate is a function that takes checks to see if a given board follows all the rules of sudoku
 
     :return: true if the board follows all the rules and false otherwise
     """
@@ -104,13 +104,20 @@ def validate():
     return True
 
 
-def main():
+def fetch():
+    """
+    fetch is a function that fetches a playable sudoku board from the dosuku api and parses the json to set it as the global board
+    """
     global board
     # fetch from api(only generates one solution 9x9 sudoku boards)
     url = "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value}}}"
     req = requests.get(url)
     response = req.json()
     board = np.array(response.get("newboard").get("grids")[0].get("value"))
+
+
+def main():
+    fetch()
     print("Original Board:")
     print_board(board)
     solve()
