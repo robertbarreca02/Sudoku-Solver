@@ -6,16 +6,29 @@ def validate_input(char, val):
     return char.isdigit() and 1 <= int(char) <= 9 and len(val) <= 1
 
 
-def on_enter(row, col, entry):
-    num = entry.get()
-    solver.print_board(solver.board)
-    solver.board[row][col] = int(num) if num.isdigit() else ""
-    solver.print_board(solver.board)
+def on_enter(event):
+    entry = event.widget  # Get the Entry widget that triggered the event
+    row, col = entry.row, entry.col
 
-    # if it can lead to a solution set as read only
+    # cache board if it needs to be reverted
+    starter_board = solver.board
+
+    num = int(entry.get())
+    solver.board[row][col] = num
+    starter_board[row][col] = num
+    # solver.print_board(solver.board)
+
+    # if it can lead to a solution set as read-only and tell user it's right
     if solver.solve() and solver.validate:
         entry.config(state="readonly")
-    # if it can't add 15 secs on timer and undo insertion into solver.board
+        solver.board = starter_board
+        return
+
+    # if it can't add 15 secs on timer, undo insertion in solver.board, and tell user it's wrong
+    else:
+        solver.board[row][col] = 0
+        solver.print_board(solver.board)
+        return
 
 
 root = Tk()
@@ -56,11 +69,7 @@ for i in range(3):
                     entry.config(
                         validatecommand=(entry.register(validate_input), "%S", "%P")
                     )
-                    entry.bind(
-                        "<Return>",
-                        lambda event, row=row, col=col, entry=entry: on_enter(
-                            row, col, entry
-                        ),
-                    )
+                    entry.bind("<Return>", on_enter)
+                    entry.row, entry.col = row, col  # Add custom attributes
 
 root.mainloop()
