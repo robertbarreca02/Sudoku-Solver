@@ -15,7 +15,6 @@ def on_enter(event):
 
     num = int(entry.get())
     solver.board[row][col] = num
-    starter_board[row][col] = num
     # solver.print_board(solver.board)
 
     # if it can lead to a solution set as read-only and tell user it's right
