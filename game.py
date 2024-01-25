@@ -2,12 +2,14 @@ from tkinter import *
 import solver
 import copy
 import time
+import datetime
 
 
 # Function to create the game board
 def start_game(difficulty):
     start_time = time.time() + 1
     error_time = 0
+    error_ct = 0
 
     def validate_input(char, val):
         """
@@ -28,6 +30,7 @@ def start_game(difficulty):
         """
         print(solver.board)
         nonlocal error_time
+        nonlocal error_ct
         entry = event.widget
         row, col = entry.row, entry.col
 
@@ -56,12 +59,15 @@ def start_game(difficulty):
             solver.board[row][col] = 0
             solver.print_board(solver.board)
             error_time += 15
-            err_label.pack(pady=20)
+            error_ct += 1
+            err_label.config(text="X" * error_ct)
             return
 
     def update_time():
-        elapsed_time = time.time() - start_time + error_time
-        timer_label.config(text=f"Elapsed time: {elapsed_time:.0f} seconds")
+        elapsed_time = int(time.time() - start_time + error_time)
+        mins = elapsed_time // 60
+        secs = elapsed_time % 60
+        timer_label.config(text=f"Elapsed time: {mins:02d}:{secs:02d}")
         game.after(100, update_time)
 
     game = Tk()
@@ -105,24 +111,25 @@ def start_game(difficulty):
                         entry.bind("<Return>", on_enter)
                         entry.row, entry.col = row, col
 
-    start_time = time.time()
-    timer_label = Label(game, text=f"Elapsed Time: 0 seconds", font=("Arial", 12))
-    timer_label.pack(side="bottom", anchor="se", padx=10, pady=10)
-    update_time()
-    err_label = Label(
-        game,
-        text="X",
-        font=("Arial", 16),
+    # Create a Frame to hold the timer and the error label
+    bottom_frame = Frame(game)
+    bottom_frame.pack(side="bottom", fill="x")
+
+    timer_label = Label(
+        bottom_frame, text=f"Elapsed Time: 0 seconds", font=("Arial", 16)
     )
+    timer_label.pack(side="right", padx=10, pady=10)
+    err_label = Label(bottom_frame, text="", font=("Arial", 16), fg="crimson")
+    err_label.pack(side="left", padx=10, pady=10)
+
+    # Start the timer
+    start_time = time.time()
+    update_time()
 
     game.mainloop()
 
     """
     TODO:
-        finish on_enter
-            add time to timer when incorrect guess
-            add red x when incorrect guess
-        Add notation for minutes
         fetch easy med or hard board based on user selection
         Add ending page when user solves board
     """
