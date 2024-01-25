@@ -1,14 +1,28 @@
 from tkinter import *
 import solver
 import copy
+import time
 
 
 def validate_input(char, val):
+    """
+    validate_input checks whether the user can place a character in its selected entry
+
+    :param char: the character to be validated
+    :param val: the current value inside the entry
+
+    :return: true if the char is a number 1-9 and the value inside the entry is one character
+    """
     return char.isdigit() and 1 <= int(char) <= 9 and len(val) <= 1
 
 
 def on_enter(event):
-    entry = event.widget  # Get the Entry widget that triggered the event
+    """
+    on_enter handles the Enter key press event. If the entered number can lead to a solution, mark the entry as read-only. Otherwise, indicate an incorrect attempt and adjust the timer
+
+    :param event: The event object associated with the Enter key press
+    """
+    entry = event.widget
     row, col = entry.row, entry.col
 
     # cache board if it needs to be reverted
@@ -32,6 +46,12 @@ def on_enter(event):
         solver.board[row][col] = 0
         solver.print_board(solver.board)
         return
+
+
+def update_time():
+    elapsed_time = time.time() - start_time
+    timer_label.config(text=f"Elapsed time: {elapsed_time:.0f} seconds")
+    root.after(100, update_time)
 
 
 root = Tk()
@@ -75,14 +95,10 @@ for i in range(3):
                     entry.bind("<Return>", on_enter)
                     entry.row, entry.col = row, col  # Add custom attributes
 
+start_time = time.time()
+timer_label = Label(root, text=f"Elapsed Time: 0 seconds", font=("Arial", 12))
+timer_label.pack(side="bottom", anchor="se", padx=10, pady=10)
+update_time()
+
+
 root.mainloop()
-
-
-# TODO:
-"""
-    add a timer
-    add a landing page
-    finish on enter fcn
-    finish on_enter fcn
-    do some testing    
-"""
