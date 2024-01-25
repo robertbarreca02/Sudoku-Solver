@@ -2,7 +2,6 @@ from tkinter import *
 import solver
 import copy
 import time
-import threading
 
 
 # Function to create the game board
@@ -27,6 +26,7 @@ def start_game(difficulty):
 
         :param event: The event object associated with the Enter key press
         """
+        print(solver.board)
         nonlocal error_time
         entry = event.widget
         row, col = entry.row, entry.col
@@ -37,12 +37,11 @@ def start_game(difficulty):
         num = int(entry.get())
         solver.board[row][col] = num
         starter_board[row][col] = num
-        # solver.print_board(solver.board)
+        # print(solver.board)
         print("check 0")
-        solvable = threading.Thread(target=solver.solve).start()
-        # solvable = solver.solve()  # and solver.validate()
+
+        solvable = solver.validate() and solver.solve()
         print("check 1")
-        time.sleep(0.1)  # Adjust as needed
 
         # if it can lead to a solution set as read-only and tell user it's right
         if solvable:
