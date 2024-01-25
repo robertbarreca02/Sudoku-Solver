@@ -2,11 +2,13 @@ from tkinter import *
 import solver
 import copy
 import time
+import threading
 
 
 # Function to create the game board
 def start_game(difficulty):
     start_time = time.time() + 1
+    error_time = 0
 
     def validate_input(char, val):
         """
@@ -25,6 +27,7 @@ def start_game(difficulty):
 
         :param event: The event object associated with the Enter key press
         """
+        nonlocal error_time
         entry = event.widget
         row, col = entry.row, entry.col
 
@@ -35,9 +38,14 @@ def start_game(difficulty):
         solver.board[row][col] = num
         starter_board[row][col] = num
         # solver.print_board(solver.board)
+        print("check 0")
+        solvable = threading.Thread(target=solver.solve).start()
+        # solvable = solver.solve()  # and solver.validate()
+        print("check 1")
+        time.sleep(0.1)  # Adjust as needed
 
         # if it can lead to a solution set as read-only and tell user it's right
-        if solver.solve() and solver.validate():
+        if solvable:
             entry.config(state="readonly")
             solver.board = starter_board
             solver.print_board(starter_board)
@@ -48,10 +56,12 @@ def start_game(difficulty):
             solver.board = starter_board
             solver.board[row][col] = 0
             solver.print_board(solver.board)
+            error_time += 15
+            err_label.pack(pady=20)
             return
 
     def update_time():
-        elapsed_time = time.time() - start_time
+        elapsed_time = time.time() - start_time + error_time
         timer_label.config(text=f"Elapsed time: {elapsed_time:.0f} seconds")
         game.after(100, update_time)
 
@@ -94,11 +104,26 @@ def start_game(difficulty):
                             validatecommand=(entry.register(validate_input), "%S", "%P")
                         )
                         entry.bind("<Return>", on_enter)
-                        entry.row, entry.col = row, col  # Add custom attributes
+                        entry.row, entry.col = row, col
 
     start_time = time.time()
     timer_label = Label(game, text=f"Elapsed Time: 0 seconds", font=("Arial", 12))
     timer_label.pack(side="bottom", anchor="se", padx=10, pady=10)
     update_time()
+    err_label = Label(
+        game,
+        text="X",
+        font=("Arial", 16),
+    )
 
     game.mainloop()
+
+    """
+    TODO:
+        finish on_enter
+            add time to timer when incorrect guess
+            add red x when incorrect guess
+        Add notation for minutes
+        fetch easy med or hard board based on user selection
+        Add ending page when user solves board
+    """
