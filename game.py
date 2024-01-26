@@ -6,7 +6,7 @@ import datetime
 
 
 # Function to create the game board
-def start_game(difficulty):
+def run_game(difficulty):
     start_time = time.time() + 1
     error_time = 0
     error_ct = 0
@@ -60,7 +60,7 @@ def start_game(difficulty):
             solver.print_board(solver.board)
             error_time += 15
             error_ct += 1
-            err_label.config(text="X" * error_ct)
+            err_label.config(text=f"Mistake Count: {error_ct}")
             return
 
     def update_time():
@@ -72,11 +72,11 @@ def start_game(difficulty):
 
     game = Tk()
     game.title("Sudoku Game")
-    game.geometry("450x350")
+    game.geometry("630x540")
 
     # Create a Frame to hold the Sudoku board
     board_frame = Frame(game, borderwidth=2, relief="solid")
-    board_frame.pack(side="top", padx=10, pady=10)
+    board_frame.pack(side="top", padx=10, pady=15)
 
     solver.fetch()
 
@@ -95,8 +95,8 @@ def start_game(difficulty):
                     val = solver.board[row][col]
                     entry = Entry(
                         box_frame,
-                        width=4,
-                        font=("Arial", 14),
+                        width=2,
+                        font=("Arial", 30),
                         justify="center",
                         validate="key",
                     )
@@ -116,11 +116,11 @@ def start_game(difficulty):
     bottom_frame.pack(side="bottom", fill="x")
 
     timer_label = Label(
-        bottom_frame, text=f"Elapsed Time: 0 seconds", font=("Arial", 16)
+        bottom_frame, text=f"Elapsed Time: 0 seconds", font=("Arial", 18)
     )
-    timer_label.pack(side="right", padx=10, pady=10)
-    err_label = Label(bottom_frame, text="", font=("Arial", 16), fg="crimson")
-    err_label.pack(side="left", padx=10, pady=10)
+    timer_label.pack(side="right", padx=15, pady=15)
+    err_label = Label(bottom_frame, text="Mistake Count: 0", font=("Arial", 18))
+    err_label.pack(side="left", padx=15, pady=15)
 
     # Start the timer
     start_time = time.time()

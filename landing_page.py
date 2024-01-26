@@ -6,13 +6,13 @@ import game
 def start_game(difficulty):
     landing_page.destroy()
     # create_game_board(difficulty)
-    game.start_game(difficulty)
+    game.run_game(difficulty)
 
 
 # Landing page window
 landing_page = Tk()
 landing_page.title("Sudoku Game - Welcome")
-landing_page.geometry("450x350")
+landing_page.geometry("500x300")
 
 # Add welcome text and buttons
 welcome_label = Label(
