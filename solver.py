@@ -104,20 +104,28 @@ def validate():
     return True
 
 
-def fetch():
+def fetch(difficulty):
     """
     fetch is a function that fetches a playable sudoku board from the dosuku api and parses the json to set it as the global board
     """
     global board
-    # fetch from api(only generates one solution 9x9 sudoku boards)
-    url = "https://sudoku-api.vercel.app/api/dosuku?query={newboard(limit:1){grids{value}}}"
+    board_difficulty = ""
+    # fetch from api until board is desired difficulty
+    url = "https://sudoku-game-and-api.netlify.app/api/sudoku"
     req = requests.get(url)
     response = req.json()
-    board = np.array(response.get("newboard").get("grids")[0].get("value"))
+    board = np.array(response.get(difficulty))
 
 
 def main():
-    fetch()
+    difficulty = None
+    while difficulty != "easy" and difficulty != "medium" and difficulty != "hard":
+        difficulty = (
+            input('Please select a difficulty "easy", "medium" or "hard": ')
+            .lower()
+            .strip()
+        )
+    fetch(difficulty)
     print("Original Board:")
     print_board(board)
     solve()

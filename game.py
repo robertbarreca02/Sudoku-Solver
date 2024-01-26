@@ -78,7 +78,7 @@ def run_game(difficulty):
     board_frame = Frame(game, borderwidth=2, relief="solid")
     board_frame.pack(side="top", padx=10, pady=15)
 
-    solver.fetch()
+    solver.fetch(difficulty)
 
     # Create a 9x9 grid of Entry widgets inside 3x3 boxes
     for i in range(3):

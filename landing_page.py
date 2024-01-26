@@ -30,21 +30,21 @@ buttons_frame.pack()
 
 # Add buttons
 easy_button = Button(
-    buttons_frame, text="Easy", command=lambda: start_game("Easy"), width=10, height=5
+    buttons_frame, text="Easy", command=lambda: start_game("easy"), width=10, height=5
 )
 easy_button.pack(side="left", pady=60, padx=10, fill="both", expand=True)
 
 medium_button = Button(
     buttons_frame,
     text="Medium",
-    command=lambda: start_game("Medium"),
+    command=lambda: start_game("medium"),
     width=10,
     height=5,
 )
 medium_button.pack(side="left", pady=60, padx=10, fill="both", expand=True)
 
 hard_button = Button(
-    buttons_frame, text="Hard", command=lambda: start_game("Hard"), width=10, height=5
+    buttons_frame, text="Hard", command=lambda: start_game("hard"), width=10, height=5
 )
 hard_button.pack(side="left", pady=60, padx=10, fill="both", expand=True)
 
