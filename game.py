@@ -36,7 +36,6 @@ def run_game(difficulty):
 
         :param event: The event object associated with the Enter key press
         """
-        print(solver.board)
         nonlocal error_time
         nonlocal error_ct
         entry = event.widget
@@ -49,18 +48,14 @@ def run_game(difficulty):
         solver.board[row][col] = num
         starter_board[row][col] = num
         # print(solver.board)
-        print("check 0")
-
+        # bug: valid leads to solution but board still incomplete
         solvable = solver.validate() and solver.solve()
-        print("check 1")
-
         # if it can lead to a solution set as read-only and tell user it's right
         if solvable:
             entry.config(state="readonly")
             solver.board = starter_board
-            solver.print_board(starter_board)
             # board is complete go to next page
-            if 0 not in solver.board:
+            if all(0 not in row for row in solver.board):
                 end_game(int(time.time() - start_time + error_time), error_ct)
             return
 
@@ -68,7 +63,7 @@ def run_game(difficulty):
         else:
             solver.board = starter_board
             solver.board[row][col] = 0
-            solver.print_board(solver.board)
+            # solver.print_board(solver.board)
             error_time += 15
             error_ct += 1
             err_label.config(text=f"Mistake Count: {error_ct}")
@@ -91,18 +86,18 @@ def run_game(difficulty):
     board_frame = Frame(game, borderwidth=2, relief="solid")
     board_frame.pack(side="top", padx=10, pady=15)
 
-    solver.fetch(difficulty)
-    # solver.board = [
-    #     [0, 5, 3, 6, 2, 1, 7, 4, 9],
-    #     [9, 7, 4, 3, 5, 8, 6, 1, 2],
-    #     [2, 6, 1, 7, 4, 9, 3, 5, 8],
-    #     [4, 2, 5, 9, 8, 3, 1, 7, 6],
-    #     [6, 3, 8, 4, 1, 7, 2, 9, 5],
-    #     [1, 9, 7, 2, 6, 5, 8, 3, 4],
-    #     [3, 8, 6, 5, 7, 4, 9, 2, 1],
-    #     [7, 4, 2, 1, 9, 6, 5, 8, 3],
-    #     [5, 1, 9, 8, 3, 2, 4, 6, 7],
-    # ]
+    # solver.fetch(difficulty)
+    solver.board = [
+        [0, 5, 3, 6, 2, 1, 7, 4, 9],
+        [9, 7, 4, 3, 5, 8, 6, 1, 2],
+        [2, 6, 1, 7, 4, 9, 3, 5, 8],
+        [4, 2, 5, 9, 8, 3, 1, 7, 6],
+        [6, 3, 8, 4, 1, 7, 2, 9, 5],
+        [1, 9, 7, 2, 6, 5, 8, 3, 4],
+        [3, 8, 6, 5, 7, 4, 0, 2, 1],
+        [7, 4, 2, 1, 9, 6, 5, 8, 3],
+        [5, 1, 9, 8, 3, 2, 4, 6, 7],
+    ]
 
     # Create a 9x9 grid of Entry widgets inside 3x3 boxes
     for i in range(3):
@@ -151,9 +146,3 @@ def run_game(difficulty):
     update_time()
 
     game.mainloop()
-
-    """
-    TODO:
-        Add ending page when user solves board
-        add highlighting to make it easier to see where to look
-    """

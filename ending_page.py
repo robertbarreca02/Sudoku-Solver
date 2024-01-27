@@ -9,6 +9,8 @@ def main(elapsed_time, err_ct):
 
     minute_str = "minutes" if mins != 1 else "minute"
     sec_str = "seconds" if mins != 1 else "second"
+    err_str = "mistakes" if err_ct != 1 else "mistake"
+    result_str = f"You completed the board in {mins} {minute_str} and {secs} {sec_str} and made {err_ct} {err_str}"
 
     ending_page = Tk()
     ending_page.title("Congratulations!")
@@ -22,7 +24,7 @@ def main(elapsed_time, err_ct):
     )
     results_label = Label(
         ending_page,
-        text=f"You completed the board in {mins} {minute_str} and {secs} {sec_str} and made {err_ct} mistakes",
+        text=result_str,
         font=("Arial", 14),
     )
     question_label = Label(
