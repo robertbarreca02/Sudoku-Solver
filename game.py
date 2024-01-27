@@ -2,7 +2,7 @@ from tkinter import *
 import solver
 import copy
 import time
-import datetime
+import ending_page
 
 
 # Function to create the game board
@@ -10,6 +10,14 @@ def run_game(difficulty):
     start_time = time.time() + 1
     error_time = 0
     error_ct = 0
+    timer_callback = None
+
+    def end_game(elapsed_time, err_ct):
+        # stop the timer
+        nonlocal timer_callback
+        game.after_cancel(timer_callback)
+        # start the end page
+        ending_page.main(elapsed_time, err_ct)
 
     def validate_input(char, val):
         """
@@ -51,6 +59,9 @@ def run_game(difficulty):
             entry.config(state="readonly")
             solver.board = starter_board
             solver.print_board(starter_board)
+            # board is complete go to next page
+            if 0 not in solver.board:
+                end_game(int(time.time() - start_time + error_time), error_ct)
             return
 
         # if it can't add 15 secs on timer, undo insertion in solver.board, and tell user it's wrong
@@ -64,12 +75,14 @@ def run_game(difficulty):
             return
 
     def update_time():
+        nonlocal timer_callback
         elapsed_time = int(time.time() - start_time + error_time)
         mins = elapsed_time // 60
         secs = elapsed_time % 60
         timer_label.config(text=f"Elapsed time: {mins:02d}:{secs:02d}")
-        game.after(100, update_time)
+        timer_callback = game.after(100, update_time)
 
+    global game
     game = Tk()
     game.title("Sudoku Game")
     game.geometry("630x540")
@@ -79,6 +92,17 @@ def run_game(difficulty):
     board_frame.pack(side="top", padx=10, pady=15)
 
     solver.fetch(difficulty)
+    # solver.board = [
+    #     [0, 5, 3, 6, 2, 1, 7, 4, 9],
+    #     [9, 7, 4, 3, 5, 8, 6, 1, 2],
+    #     [2, 6, 1, 7, 4, 9, 3, 5, 8],
+    #     [4, 2, 5, 9, 8, 3, 1, 7, 6],
+    #     [6, 3, 8, 4, 1, 7, 2, 9, 5],
+    #     [1, 9, 7, 2, 6, 5, 8, 3, 4],
+    #     [3, 8, 6, 5, 7, 4, 9, 2, 1],
+    #     [7, 4, 2, 1, 9, 6, 5, 8, 3],
+    #     [5, 1, 9, 8, 3, 2, 4, 6, 7],
+    # ]
 
     # Create a 9x9 grid of Entry widgets inside 3x3 boxes
     for i in range(3):
@@ -130,6 +154,6 @@ def run_game(difficulty):
 
     """
     TODO:
-        fetch easy med or hard board based on user selection
         Add ending page when user solves board
+        add highlighting to make it easier to see where to look
     """
