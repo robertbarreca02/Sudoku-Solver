@@ -3,8 +3,17 @@ import game
 
 
 def main():
+    """
+    main sets up the landing page gui
+    """
+
     # Function to close the landing page and start the game
     def start_game(difficulty):
+        """
+        start_game starts the sudoku game based on the user's selected difficulty
+
+        :param difficulty: what game mode the user wants to play (easy, medium, or hard)
+        """
         landing_page.destroy()
         # create_game_board(difficulty)
         game.run_game(difficulty)

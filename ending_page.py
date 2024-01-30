@@ -4,6 +4,10 @@ import game
 
 
 def main(elapsed_time, err_ct):
+    """
+    main sets up the ending_page
+    """
+    # format how long it took user to play game
     mins = elapsed_time // 60
     secs = elapsed_time % 60
 
@@ -36,13 +40,18 @@ def main(elapsed_time, err_ct):
     results_label.pack(pady=20)
     question_label.pack(pady=20)
 
-    # Function to restart the game
     def play_again():
+        """
+        play_again closes both the ending page and the game page, while opening a new landing page, so that the user can play again
+        """
         ending_page.destroy()
         game.game.destroy()
         landing_page.main()
 
     def quit_session():
+        """
+        quit session closes both the ending page and the game page
+        """
         ending_page.destroy()
         game.game.destroy()
 

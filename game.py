@@ -1,18 +1,24 @@
 from tkinter import *
-import solver
 import copy
 import time
 import ending_page
+import solver
 
 
 # Function to create the game board
 def run_game(difficulty):
+    """
+    run_game sets up the sudoku board so the user can play it
+    """
     start_time = time.time() + 1
     error_time = 0
     error_ct = 0
     timer_callback = None
 
     def end_game(elapsed_time, err_ct):
+        """
+        end_game is called when the user completes the sudoku board, it stops the time, and loads the ending page
+        """
         # stop the timer
         nonlocal timer_callback
         game.after_cancel(timer_callback)
@@ -47,8 +53,6 @@ def run_game(difficulty):
         num = int(entry.get())
         solver.board[row][col] = num
         starter_board[row][col] = num
-        # print(solver.board)
-        # bug: valid leads to solution but board still incomplete
         solvable = solver.validate() and solver.solve()
         # if it can lead to a solution set as read-only and tell user it's right
         if solvable:
@@ -70,6 +74,9 @@ def run_game(difficulty):
             return
 
     def update_time():
+        """
+        update_time sets the label every 100 ms to convey how long it's been since the user started the game
+        """
         nonlocal timer_callback
         elapsed_time = int(time.time() - start_time + error_time)
         mins = elapsed_time // 60
@@ -86,18 +93,7 @@ def run_game(difficulty):
     board_frame = Frame(game, borderwidth=2, relief="solid")
     board_frame.pack(side="top", padx=10, pady=15)
 
-    # solver.fetch(difficulty)
-    solver.board = [
-        [0, 5, 3, 6, 2, 1, 7, 4, 9],
-        [9, 7, 4, 3, 5, 8, 6, 1, 2],
-        [2, 6, 1, 7, 4, 9, 3, 5, 8],
-        [4, 2, 5, 9, 8, 3, 1, 7, 6],
-        [6, 3, 8, 4, 1, 7, 2, 9, 5],
-        [1, 9, 7, 2, 6, 5, 8, 3, 4],
-        [3, 8, 6, 5, 7, 4, 0, 2, 1],
-        [7, 4, 2, 1, 9, 6, 5, 8, 3],
-        [5, 1, 9, 8, 3, 2, 4, 6, 7],
-    ]
+    solver.fetch(difficulty)
 
     # Create a 9x9 grid of Entry widgets inside 3x3 boxes
     for i in range(3):
