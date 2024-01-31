@@ -118,6 +118,10 @@ def fetch(difficulty):
 
 
 def main():
+    """
+    main handles user input, and calls the corresponding function to fetch Sudoku puzzles, solving them, and displaying the original and solved boards.
+
+    """
     difficulty = None
     while difficulty != "easy" and difficulty != "medium" and difficulty != "hard":
         difficulty = (
