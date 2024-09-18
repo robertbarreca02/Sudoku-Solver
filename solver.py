@@ -45,7 +45,7 @@ def is_possible(i, j, n):
     return True
 
 
-def solve(callback=None):
+def solve():
     """
     solve is a recursive function that solves the sudoku board by filling in all the zero slots of the board
 
@@ -63,15 +63,67 @@ def solve(callback=None):
                 for num in range(1, 10):
                     # there is a valid num for the current slot
                     if is_possible(i, j, num):
-                        if callback:
-                            callback(i, j, num)
                         board[i][j] = num
-                        if solve(callback):
+                        if solve():
                             return True
                         board[i][j] = 0
                 # there is not a valid number for the current slot, must backtrack
                 return False
     return False
+
+
+def solve_iteratively(callback=None):
+    """
+    solve_iteratively is an iterative backtracking function that solves the Sudoku board.
+
+    :param callback: Optional function to call for visualization updates.
+    """
+    stack = []
+
+    # Find all empty cells on the board and push them onto the stack with initial values
+    for i in range(8, -1, -1):
+        for j in range(8, -1, -1):
+            if board[i][j] == 0:
+                stack.append((i, j, 1))
+
+    while stack:
+        i, j, num = stack.pop()
+
+        # Try placing 'num' in position (i, j)
+        while num <= 9:
+            if is_possible(i, j, num):
+                board[i][j] = num
+                # Update the UI for visualization purposes
+                if callback:
+                    callback(i, j, num)
+
+                # Check if the board is solved
+                if 0 not in board and validate():
+                    return True
+
+                # Push the next empty cell onto the stack with the initial number
+                for x in range(i, 9):
+                    for y in range(j if x == i else 0, 9):
+                        if board[x][y] == 0:
+                            # Push the next number for current cell
+                            stack.append((i, j, num + 1))
+                            # Push the next empty cell
+                            stack.append((x, y, 1))
+                            break
+                    else:
+                        continue
+                    break
+                # Move on to the next cell
+                break
+            num += 1
+
+        # Backtrack if no number is valid
+        if num > 9:
+            board[i][j] = 0
+            if callback:
+                callback(i, j, num)
+
+    return False  # No solution
 
 
 def validate():

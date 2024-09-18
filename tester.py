@@ -36,7 +36,7 @@ class tester(unittest.TestCase):
 
     def test_solve(self):
         """
-        test_solve tests the functionality of the solve function solver.py
+        test_solve tests the functionality of the solve function in solver.py
         """
         # case 1: test an easy board
         solver.board = np.array(
@@ -118,6 +118,91 @@ class tester(unittest.TestCase):
             [9, 1, 7, 4, 6, 2, 8, 5, 3],
         ]
         self.assertFalse(solver.solve())
+
+    def test_solve_iteratively(self):
+        """
+        test_solve tests the functionality of the solve_iteratively function in solver.py
+        """
+        # case 1: test an easy board
+        solver.board = np.array(
+            [
+                [0, 0, 6, 3, 9, 0, 8, 0, 1],
+                [0, 8, 9, 0, 7, 0, 5, 3, 0],
+                [3, 5, 0, 8, 0, 0, 9, 6, 0],
+                [0, 0, 0, 6, 0, 8, 0, 2, 3],
+                [8, 0, 1, 0, 3, 4, 0, 0, 0],
+                [4, 0, 3, 0, 0, 0, 6, 0, 8],
+                [6, 0, 0, 0, 0, 9, 3, 8, 0],
+                [0, 3, 0, 7, 8, 2, 0, 9, 0],
+                [0, 7, 0, 0, 0, 3, 0, 0, 0],
+            ]
+        )
+        solver.solve_iteratively()
+        self.assertTrue(solver.validate())
+
+        # case 2 solve a medium board
+        solver.board = np.array(
+            [
+                [0, 0, 0, 0, 2, 7, 0, 4, 1],
+                [1, 0, 0, 0, 0, 0, 8, 0, 0],
+                [0, 4, 0, 1, 0, 0, 0, 0, 5],
+                [6, 0, 1, 0, 3, 0, 0, 9, 0],
+                [0, 0, 5, 4, 8, 0, 0, 0, 0],
+                [0, 3, 4, 7, 6, 1, 0, 0, 2],
+                [5, 0, 7, 0, 0, 4, 0, 0, 8],
+                [4, 0, 0, 0, 5, 8, 0, 0, 7],
+                [8, 1, 2, 0, 0, 3, 0, 0, 6],
+            ]
+        )
+        solver.solve_iteratively()
+        self.assertTrue(solver.validate())
+
+        # case 3 solve a hard board
+        solver.board = np.array(
+            [
+                [0, 0, 0, 0, 7, 0, 6, 0, 0],
+                [0, 2, 0, 0, 0, 0, 0, 0, 0],
+                [3, 0, 0, 0, 0, 0, 7, 0, 0],
+                [0, 8, 0, 7, 0, 0, 0, 0, 0],
+                [0, 6, 0, 0, 0, 0, 0, 0, 0],
+                [0, 7, 0, 0, 0, 0, 0, 0, 0],
+                [0, 0, 0, 6, 0, 0, 3, 0, 5],
+                [0, 0, 6, 3, 0, 0, 8, 0, 0],
+                [0, 3, 0, 5, 0, 0, 2, 0, 6],
+            ]
+        )
+        solver.solve_iteratively()
+        self.assertTrue(solver.validate())
+
+        # case 4: test an unsolvable board
+        solver.board = np.array(
+            [
+                [5, 3, 0, 0, 7, 0, 0, 0, 0],
+                [6, 0, 0, 1, 9, 5, 0, 0, 0],
+                [0, 9, 8, 0, 0, 0, 0, 6, 0],
+                [8, 0, 0, 0, 6, 0, 0, 0, 3],
+                [4, 0, 0, 8, 0, 3, 0, 0, 1],
+                [7, 0, 0, 0, 2, 0, 0, 0, 6],
+                [0, 6, 0, 0, 0, 0, 2, 8, 0],
+                [0, 0, 0, 4, 1, 9, 0, 0, 5],
+                [0, 0, 0, 0, 8, 0, 0, 7, 8],
+            ]
+        )
+        self.assertFalse(solver.solve_iteratively())
+
+        # case 5: test a board that's solved incorrectly
+        solver.board = [
+            [2, 3, 9, 6, 1, 7, 4, 8, 5],
+            [1, 4, 6, 5, 8, 9, 2, 3, 7],
+            [5, 7, 8, 3, 2, 4, 6, 1, 9],
+            [8, 9, 2, 7, 5, 6, 3, 4, 1],
+            [4, 6, 1, 2, 9, 3, 1, 7, 8],
+            [7, 5, 3, 1, 4, 8, 9, 6, 2],
+            [6, 8, 5, 9, 3, 1, 7, 2, 4],
+            [3, 2, 4, 8, 7, 5, 1, 9, 6],
+            [9, 1, 7, 4, 6, 2, 8, 5, 3],
+        ]
+        self.assertFalse(solver.solve_iteratively())
 
     def test_validate(self):
         """

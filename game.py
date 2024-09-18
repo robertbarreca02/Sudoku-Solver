@@ -18,26 +18,29 @@ def run_game(difficulty):
 
     def update_board(i, j, num):
         entry = entries[i][j]
-        entry.delete(0, "end")
-        entry.insert(0, num)
+        if num > 0:
+            entry.delete(0, "end")
+            entry.insert(0, num)
+        else:
+            entry.delete(0, "end")
+        entry.update()  # Update the entry widget to reflect the changes immediately
 
     def end_game(elapsed_time, err_ct):
         """
         end_game is called when the user completes the sudoku board, it stops the time, and loads the ending page
         """
-        # stop the timer
         nonlocal timer_callback
-        game.after_cancel(timer_callback)
+        if timer_callback:
+            game.after_cancel(timer_callback)  # Cancel any pending timer updates
         # start the end page
         ending_page.main(elapsed_time, err_ct)
+        game.quit()  # End the Tkinter mainloop properly
 
     def validate_input(char, val):
         """
         validate_input checks whether the user can place a character in its selected entry
-
         :param char: the character to be validated
         :param val: the current value inside the entry
-
         :return: true if the char is a number 1-9 and the value inside the entry is one character
         """
         return char.isdigit() and 1 <= int(char) <= 9 and len(val) <= 1
@@ -45,11 +48,8 @@ def run_game(difficulty):
     def on_enter(event):
         """
         on_enter handles the Enter key press event. If the entered number can lead to a solution, mark the entry as read-only. Otherwise, indicate an incorrect attempt and adjust the timer
-
-        :param event: The event object associated with the Enter key press
         """
-        nonlocal error_time
-        nonlocal error_ct
+        nonlocal error_time, error_ct
         entry = event.widget
         row, col = entry.row, entry.col
 
@@ -68,8 +68,6 @@ def run_game(difficulty):
             if all(0 not in row for row in solver.board):
                 end_game(int(time.time() - start_time + error_time), error_ct)
             return
-
-        # if it can't add 15 secs on timer, undo insertion in solver.board, and tell user it's wrong
         else:
             solver.board = starter_board
             solver.board[row][col] = 0
@@ -83,17 +81,17 @@ def run_game(difficulty):
         update_time sets the label every 100 ms to convey how long it's been since the user started the game
         """
         nonlocal timer_callback
-        elapsed_time = int(time.time() - start_time + error_time)
-        mins = elapsed_time // 60
-        secs = elapsed_time % 60
-        timer_label.config(text=f"Elapsed time: {mins:02d}:{secs:02d}")
-        timer_callback = game.after(100, update_time)
+        if game.winfo_exists():  # Ensure the game window still exists before updating
+            elapsed_time = int(time.time() - start_time + error_time)
+            mins = elapsed_time // 60
+            secs = elapsed_time % 60
+            timer_label.config(text=f"Elapsed time: {mins:02d}:{secs:02d}")
+            # Schedule the next update and store the callback
+            timer_callback = game.after(100, update_time)
 
     def solve_board():
-        nonlocal error_time
-        nonlocal error_ct
-        solver.solve(update_board)
-        print(solver.board)
+        nonlocal error_time, error_ct
+        solver.solve_iteratively(update_board)
         for i in range(9):
             for j in range(9):
                 entries[i][j].config(state="readonly")
