@@ -45,7 +45,7 @@ def is_possible(i, j, n):
     return True
 
 
-def solve():
+def solve(callback=None):
     """
     solve is a recursive function that solves the sudoku board by filling in all the zero slots of the board
 
@@ -63,8 +63,10 @@ def solve():
                 for num in range(1, 10):
                     # there is a valid num for the current slot
                     if is_possible(i, j, num):
+                        if callback:
+                            callback(i, j, num)
                         board[i][j] = num
-                        if solve():
+                        if solve(callback):
                             return True
                         board[i][j] = 0
                 # there is not a valid number for the current slot, must backtrack

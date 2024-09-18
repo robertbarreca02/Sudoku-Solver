@@ -14,6 +14,12 @@ def run_game(difficulty):
     error_time = 0
     error_ct = 0
     timer_callback = None
+    entries = [[None for _ in range(9)] for _ in range(9)]
+
+    def update_board(i, j, num):
+        entry = entries[i][j]
+        entry.delete(0, "end")
+        entry.insert(0, num)
 
     def end_game(elapsed_time, err_ct):
         """
@@ -67,7 +73,6 @@ def run_game(difficulty):
         else:
             solver.board = starter_board
             solver.board[row][col] = 0
-            # solver.print_board(solver.board)
             error_time += 15
             error_ct += 1
             err_label.config(text=f"Mistake Count: {error_ct}")
@@ -83,6 +88,16 @@ def run_game(difficulty):
         secs = elapsed_time % 60
         timer_label.config(text=f"Elapsed time: {mins:02d}:{secs:02d}")
         timer_callback = game.after(100, update_time)
+
+    def solve_board():
+        nonlocal error_time
+        nonlocal error_ct
+        solver.solve(update_board)
+        print(solver.board)
+        for i in range(9):
+            for j in range(9):
+                entries[i][j].config(state="readonly")
+        end_game(int(time.time() - start_time + error_time), error_ct)
 
     global game
     game = Tk()
@@ -116,6 +131,7 @@ def run_game(difficulty):
                         validate="key",
                     )
                     entry.grid(row=m, column=n, padx=1, pady=1)
+                    entries[row][col] = entry
                     if val != 0:
                         entry.insert(0, val)
                         entry.config(state="readonly")
@@ -126,7 +142,7 @@ def run_game(difficulty):
                         entry.bind("<Return>", on_enter)
                         entry.row, entry.col = row, col
 
-    # Create a Frame to hold the timer and the error label
+    # Create a Frame to hold the timer and the label, and solve button
     bottom_frame = Frame(game)
     bottom_frame.pack(side="bottom", fill="x")
 
@@ -136,6 +152,12 @@ def run_game(difficulty):
     timer_label.pack(side="right", padx=15, pady=15)
     err_label = Label(bottom_frame, text="Mistake Count: 0", font=("Arial", 18))
     err_label.pack(side="left", padx=15, pady=15)
+
+    # solve board button
+    solve_button = Button(
+        bottom_frame, text="Solve Board", command=solve_board, font=("Arial", 18)
+    )
+    solve_button.pack(side="bottom", pady=15)
 
     # Start the timer
     start_time = time.time()
