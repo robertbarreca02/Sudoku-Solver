@@ -90,6 +90,9 @@ def run_game(difficulty):
             timer_callback = game.after(100, update_time)
 
     def solve_board():
+        """
+        solve_board visualizes the backtracking algorithm solving the given board
+        """
         nonlocal error_time, error_ct
         solver.solve_iteratively(update_board)
         for i in range(9):
