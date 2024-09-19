@@ -80,11 +80,14 @@ def solve_iteratively(callback=None):
     """
     stack = []
 
-    # Find all empty cells on the board and push them onto the stack with initial values
-    for i in range(8, -1, -1):
-        for j in range(8, -1, -1):
+    # Find first empty cell
+    for i in range(9):
+        for j in range(9):
             if board[i][j] == 0:
                 stack.append((i, j, 1))
+                break
+        if stack:
+            break
 
     while stack:
         i, j, num = stack.pop()
@@ -110,9 +113,9 @@ def solve_iteratively(callback=None):
                             # Push the next empty cell
                             stack.append((x, y, 1))
                             break
-                    else:
-                        continue
-                    break
+                    # found next empty cell, break outer loop
+                    if len(stack) >= 2 and stack[-2] == (i, j, num + 1):
+                        break
                 # Move on to the next cell
                 break
             num += 1
